@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -19,12 +19,17 @@
     "@faire/eslint-config": "workspace:*",
     "@faire/prettier-config": "workspace:*",
     "@faire/tsconfig": "workspace:*",
+    "@types/react": "catalog:react18",
+    "@types/react-dom": "catalog:react18",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
   "prettier": "@faire/prettier-config",
   "dependencies": {
-    "pocketbase": "^0.21.5"
+    "@tanstack/react-query": "catalog:",
+    "pocketbase": "^0.21.5",
+    "react": "catalog:react18",
+    "react-dom": "catalog:react18"
   }
 }

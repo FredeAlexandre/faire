@@ -6,5 +6,5 @@
       "mode": "auto"
     }
   ],
-  "conventionalCommits.scopes": ["repository", "pocketbase"]
+  "conventionalCommits.scopes": ["repository", "pocketbase", "app"]
 }
