@@ -10,9 +10,6 @@ const config = {
 
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
-    "@faire/api",
-    "@faire/auth",
-    "@faire/db",
     "@faire/ui",
     "@faire/validators",
   ],

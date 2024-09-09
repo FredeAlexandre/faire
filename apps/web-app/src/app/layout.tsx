@@ -6,15 +6,13 @@ import { cn } from "@faire/ui";
 import { ThemeProvider, ThemeToggle } from "@faire/ui/theme";
 import { Toaster } from "@faire/ui/toast";
 
-import { TRPCReactProvider } from "~/trpc/react";
-
 import "~/app/globals.css";
 
 import { env } from "~/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    env.VERCEL_ENV === "production"
+    env.NODE_ENV === "production"
       ? "https://turbo.t3.gg"
       : "http://localhost:3000",
   ),
@@ -51,7 +49,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{props.children}</TRPCReactProvider>
+          {props.children}
           <div className="absolute bottom-4 right-4">
             <ThemeToggle />
           </div>
