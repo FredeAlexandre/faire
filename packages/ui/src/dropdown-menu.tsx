@@ -8,13 +8,18 @@ import {
   DotFilledIcon,
 } from "@radix-ui/react-icons";
 
-import { cn } from "@faire/ui";
+import { cn } from ".";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
+
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 const DropdownMenuSubTrigger = React.forwardRef<
