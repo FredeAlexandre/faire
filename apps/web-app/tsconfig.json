@@ -1,7 +1,10 @@
 {
   "extends": "@faire/tsconfig/base.json",
   "compilerOptions": {
-    "lib": ["ES2022", "dom", "dom.iterable"],
+    "types": [
+      "@serwist/next/typings"
+    ],
+    "lib": ["ES2022", "dom", "dom.iterable", "webworker"],
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
@@ -11,5 +14,5 @@
     "module": "esnext"
   },
   "include": [".", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "public/sw.js"]
 }

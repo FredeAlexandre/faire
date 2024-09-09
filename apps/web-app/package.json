@@ -16,6 +16,7 @@
   "dependencies": {
     "@faire/ui": "workspace:*",
     "@faire/validators": "workspace:*",
+    "@serwist/next": "^9.0.7",
     "@t3-oss/env-nextjs": "^0.11.0",
     "@tanstack/react-query": "catalog:",
     "geist": "^1.3.1",
@@ -37,6 +38,7 @@
     "eslint": "catalog:",
     "jiti": "^1.21.6",
     "prettier": "catalog:",
+    "serwist": "^9.0.7",
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
   },
