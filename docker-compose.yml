@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # PocketBase service
+  pocketbase:
+    build:
+      context: ./docker-images/pocketbase
+      dockerfile: Dockerfile
+      args:
+        PB_VERSION: 0.22.20
+    volumes:
+      - ./docker-images/pocketbase/pb_data:/pb/pb_data
+      - ./docker-images/pocketbase/pb_migrations:/pb/pb_migrations
+      - ./docker-images/pocketbase/pb_hooks:/pb/pb_hooks
+    ports:
+      - "8080:8080"
+
+  # Web app service (only in production)
+  web-app:
+    build:
+      context: .
+      dockerfile: ./docker-images/monorepo-apps/Dockerfile
+      target: web-app
+    depends_on:
+      - pocketbase
+    ports:
+      - "3000:3000"

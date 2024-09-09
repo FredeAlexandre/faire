@@ -50,3 +50,6 @@ dist/
 
 # turbo
 .turbo
+
+# Pocketbase data
+docker-images/pocketbase/pb_data
