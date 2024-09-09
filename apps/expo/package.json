@@ -43,14 +43,14 @@
     "superjson": "2.2.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
     "@faire/api": "workspace:*",
     "@faire/eslint-config": "workspace:*",
     "@faire/prettier-config": "workspace:*",
     "@faire/tailwind-config": "workspace:*",
     "@faire/tsconfig": "workspace:*",
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
-    "@babel/runtime": "^7.25.0",
     "@types/babel__core": "^7.20.5",
     "@types/react": "catalog:react18",
     "eslint": "catalog:",
