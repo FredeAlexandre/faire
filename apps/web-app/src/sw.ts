@@ -1,5 +1,5 @@
-import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
+import { defaultCache } from "@serwist/next/worker";
 import { Serwist } from "serwist";
 
 // This declares the value of `injectionPoint` to TypeScript.
