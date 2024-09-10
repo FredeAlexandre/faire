@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { pb } from "@faire/pocketbase";
 import { Button } from "@faire/ui/button";
 import { Input } from "@faire/ui/input";
-import { toast } from "@faire/ui/toast";
 
 export function Register() {
   const { mutate, isPending } = useMutation({

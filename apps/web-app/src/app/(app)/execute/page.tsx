@@ -49,7 +49,8 @@ function renderTimelineItem(
   const isFirstItem = key == 0;
   const isSameDayAsPrevious = isFirstItem
     ? false
-    : isSameDay(item.start, items[key - 1].start);
+    : //@ts-expect-error TODO find a better way to access arrays and handle undefined values
+      isSameDay(item.start, items[key - 1].start);
   const nextItem = isLastItem ? item : items[key + 1];
   const isLight = isPast(item.start);
 
@@ -99,6 +100,7 @@ function renderTimelineItem(
     </TimelineItemMiddle>
   );
   const end_tail = isLastItem ? null : (
+    //@ts-expect-error TODO find a better way to access arrays and handle undefined values
     <TimelineTailEnd className={cn({ "bg-primary": isPast(nextItem.start) })} />
   );
 
