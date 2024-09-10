@@ -4,12 +4,13 @@ import { GeistSans } from "geist/font/sans";
 
 import { cn } from "@faire/ui";
 import { ThemeProvider } from "@faire/ui/theme";
-import { Toaster } from "@faire/ui/toast";
+import { Toaster } from "@faire/ui/toaster";
 
 import "~/app/globals.css";
 
+import { FloatingNavbar } from "~/components/floating-navbar";
+import { QueryClientProvider } from "~/components/query-client-provider";
 import { env } from "~/env";
-import { QueryClientProvider } from "./_components/query-client-provider";
 
 const APP_NAME = "PWA App";
 const APP_DEFAULT_TITLE = "My Awesome PWA App";
@@ -76,6 +77,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <QueryClientProvider>
             {props.children}
+            <FloatingNavbar />
             <Toaster />
           </QueryClientProvider>
         </ThemeProvider>
