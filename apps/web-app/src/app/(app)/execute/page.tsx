@@ -18,11 +18,11 @@ import {
   TimelineTailStart,
 } from "~/components/timeline";
 
-type TimelineItemType = {
+interface TimelineItemType {
   id: number | string;
   start: Date;
   content: string;
-};
+}
 
 const planning = (
   [
@@ -134,14 +134,11 @@ export default function Execute() {
         <Popover>
           <PopoverTrigger asChild>
             <Button
-              variant={"outline"}
-              className={cn(
-                "w-[16rem] justify-start text-left font-normal",
-                !date && "text-muted-foreground",
-              )}
+              variant="outline"
+              className="w-[16rem] justify-start text-left font-normal"
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {format(date, "PPP")}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">

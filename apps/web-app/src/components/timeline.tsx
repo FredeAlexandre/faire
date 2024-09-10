@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "@faire/ui";
 
-export interface TimelineProps extends React.HTMLAttributes<HTMLUListElement> {}
+export type TimelineProps = React.HTMLAttributes<HTMLUListElement>;
 
 export const Timeline = React.forwardRef<HTMLUListElement, TimelineProps>(
   ({ className, ...props }, ref) => {
@@ -16,8 +16,7 @@ export const Timeline = React.forwardRef<HTMLUListElement, TimelineProps>(
   },
 );
 
-export interface TimelineItemProps
-  extends React.HTMLAttributes<HTMLLIElement> {}
+export type TimelineItemProps = React.HTMLAttributes<HTMLLIElement>;
 
 export const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
   ({ className, ...props }, ref) => {
@@ -34,8 +33,7 @@ export const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
   },
 );
 
-export interface TimelineItemStartProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+export type TimelineItemStartProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const TimelineItemStart = React.forwardRef<
   HTMLDivElement,
@@ -53,8 +51,7 @@ export const TimelineItemStart = React.forwardRef<
   );
 });
 
-export interface TimelineItemMiddleProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+export type TimelineItemMiddleProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const TimelineItemMiddle = React.forwardRef<
   HTMLDivElement,
@@ -69,8 +66,7 @@ export const TimelineItemMiddle = React.forwardRef<
   );
 });
 
-export interface TimelineItemEndProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+export type TimelineItemEndProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const TimelineItemEnd = React.forwardRef<
   HTMLDivElement,
@@ -88,8 +84,7 @@ export const TimelineItemEnd = React.forwardRef<
   );
 });
 
-export interface TimelineTailStartProps
-  extends React.HTMLAttributes<HTMLHRElement> {}
+export type TimelineTailStartProps = React.HTMLAttributes<HTMLHRElement>;
 
 export const TimelineTailStart = React.forwardRef<
   HTMLHRElement,
@@ -107,8 +102,7 @@ export const TimelineTailStart = React.forwardRef<
   );
 });
 
-export interface TimelineTailEndProps
-  extends React.HTMLAttributes<HTMLHRElement> {}
+export type TimelineTailEndProps = React.HTMLAttributes<HTMLHRElement>;
 
 export const TimelineTailEnd = React.forwardRef<
   HTMLHRElement,
