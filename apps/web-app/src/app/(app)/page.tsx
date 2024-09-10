@@ -1,18 +1,22 @@
 "use client";
 
-import React from "react";
+import type { DragEndEvent } from "@dnd-kit/core";
+import * as React from "react";
 import {
   DndContext,
   pointerWithin,
   useDraggable,
   useDroppable,
 } from "@dnd-kit/core";
-import { Plus } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
+import { pb } from "@faire/pocketbase";
 import { cn } from "@faire/ui";
 import { Button } from "@faire/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@faire/ui/tabs";
 import { Textarea } from "@faire/ui/textarea";
+
+import { queryClient } from "~/components/query-client-provider";
 
 function Entry({
   children,
@@ -39,7 +43,7 @@ function Entry({
         {...listeners}
         {...attributes}
         className={cn(
-          "w-full cursor-grab space-y-1 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm",
+          "w-full cursor-grab space-y-1 whitespace-pre rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm",
           {
             "cursor-grabbing": isDragging,
           },
@@ -51,41 +55,17 @@ function Entry({
   );
 }
 
-function EntryFiles({ children }: { children?: React.ReactNode }) {
-  return <div className="flex flex-wrap gap-1">{children}</div>;
-}
-
-function EntryFile({ title }: { title: string }) {
-  return (
-    <Button variant="outline" size="sm">
-      {title}
-    </Button>
-  );
-}
-
 function EntryContent({ children }: { children?: string }) {
   return <div>{children}</div>;
 }
 
-function FakeEntry({ id }: { id: string | number }) {
-  return (
-    <Entry id={id}>
-      <EntryContent>Go walk the dog outside</EntryContent>
-      <EntryFiles>
-        <EntryFile title="id_parent.pdf" />
-        <EntryFile title="id_parent.pdf" />
-        <EntryFile title="id_parent.pdf" />
-      </EntryFiles>
-    </Entry>
-  );
-}
-
-function Box({
+function Box<T>({
   id,
   children,
 }: {
   id: string | number;
   children?: React.ReactNode;
+  onDeposit?: (item: T) => void;
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id: id,
@@ -106,6 +86,142 @@ function Box({
   );
 }
 
+function TrashBox() {
+  return (
+    <Box
+      onDeposit={(item) => {
+        console.log(item);
+      }}
+      id="trash"
+    >
+      Trash
+    </Box>
+  );
+}
+
+async function TrashBoxHandleEntry(item: string) {
+  await pb.collection("inbox_entries").update(item, { trash: true });
+  await queryClient.invalidateQueries({ queryKey: ["entries"] });
+}
+
+function EntriesList() {
+  const { data } = useQuery({
+    queryKey: ["entries"],
+    queryFn: async () => {
+      return pb
+        .collection("inbox_entries")
+        .getList(1, 50, { filter: "trash = false" });
+    },
+  });
+
+  if (!data || data.items.length == 0)
+    return (
+      <div className="pt-10 text-center">
+        Add entries by writing down your though in the inbox tab
+      </div>
+    );
+
+  return (
+    <div className="space-y-2">
+      {data.items.map((data) => {
+        return (
+          <Entry key={data.id} id={data.id}>
+            <EntryContent>{data.content}</EntryContent>
+          </Entry>
+        );
+      })}
+    </div>
+  );
+}
+
+function InboxTextarea() {
+  const ref = React.useRef<HTMLFormElement>(null);
+
+  const [content, setContent] = React.useState("");
+
+  const { mutateAsync } = useMutation({
+    mutationFn: async (content: string) => {
+      if (!pb.authStore.model) return false;
+
+      return (
+        pb
+          .collection("inbox_entries")
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          .create({ user: pb.authStore.model.id, content })
+      );
+    },
+  });
+
+  return (
+    <form
+      ref={ref}
+      onSubmit={(e) => {
+        e.preventDefault();
+        mutateAsync(content)
+          .then(() => {
+            setContent("");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }}
+      className="space-y-2 pt-4"
+    >
+      <div className="space-y-1">
+        <Textarea
+          rows={20}
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key == "Enter" && e.shiftKey == false) {
+              e.preventDefault();
+              if (ref.current) ref.current.requestSubmit();
+            }
+          }}
+          placeholder="Create a placeholder here which change on each render with a predefine list of examples"
+        />
+      </div>
+      <div className="flex justify-between">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setContent("");
+          }}
+        >
+          Clear
+        </Button>
+        <Button type="submit" className="w-[10rem]">
+          Save
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function InboxEntries() {
+  function handleDragEnd(event: DragEndEvent) {
+    if (!event.over || typeof event.active.id == "number") return;
+    if (event.over.id == "trash") return TrashBoxHandleEntry(event.active.id);
+  }
+
+  return (
+    <div className="space-y-6 pt-4">
+      <DndContext collisionDetection={pointerWithin} onDragEnd={handleDragEnd}>
+        <div className="grid grid-cols-4 gap-4">
+          {/** Faire comme si c'etait des boutons carres */}
+          <Box id="actions">Actions</Box>
+          <Box id="events">Events</Box>
+          <Box id="delegated">Delegated</Box>
+          <TrashBox />
+        </div>
+        <EntriesList />
+      </DndContext>
+    </div>
+  );
+}
+
 export default function InboxPage() {
   return (
     <div className="container max-w-[48rem] space-y-20 pt-10">
@@ -117,58 +233,11 @@ export default function InboxPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="inbox">
-          <div className="space-y-6 pt-4">
-            <div className="space-y-1">
-              <p className="text-muted-foreground">
-                Here you can write everything you have in mind and want to
-                collecte later. This can be notes, reminders, references,
-                documents, tasks, etc... Write something you will be able to
-                understand later
-              </p>
-            </div>
-            <div className="space-y-1">
-              <Textarea
-                rows={10}
-                placeholder="Create a placeholder here which change on each render with a predefine list of examples"
-              />
-              <div className="flex flex-wrap gap-1">
-                <Button variant="outline">
-                  Add file <Plus className="inline" size={16} />
-                </Button>
-              </div>
-            </div>
-            <Button className="w-full">Save</Button>
-          </div>
+          <InboxTextarea />
         </TabsContent>
 
         <TabsContent value="entries">
-          <div className="space-y-6 pt-4">
-            <div className="space-y-1">
-              <p className="text-muted-foreground">
-                Here is all the entries you created from the Inbox. You can drag
-                to the right box "Action", "Event", "Reference" or "Delegated"
-              </p>
-            </div>
-            <DndContext collisionDetection={pointerWithin}>
-              <div className="grid grid-cols-4 gap-4">
-                {/** Faire comme si c'etait des boutons carres */}
-                <Box id="actions">
-                  Actions
-                  <Box id="projects">Projects</Box>
-                </Box>
-                <Box id="events">Events</Box>
-                <Box id="references">References</Box>
-                <Box id="delegated">Delegated</Box>
-              </div>
-              <div className="space-y-2">
-                <FakeEntry id="0" />
-                <FakeEntry id="1" />
-                <FakeEntry id="2" />
-                <FakeEntry id="3" />
-                <FakeEntry id="4" />
-              </div>
-            </DndContext>
-          </div>
+          <InboxEntries />
         </TabsContent>
       </Tabs>
     </div>
