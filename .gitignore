@@ -13,10 +13,6 @@ coverage
 out/
 next-env.d.ts
 
-# Serwist
-public/sw*
-public/swe-worker*
-
 # nitro
 .nitro/
 .output/
