@@ -8,7 +8,6 @@ import { Toaster } from "@faire/ui/toaster";
 
 import "~/app/globals.css";
 
-import { FloatingNavbar } from "~/components/floating-navbar";
 import { QueryClientProvider } from "~/components/query-client-provider";
 import { env } from "~/env";
 
@@ -77,7 +76,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <QueryClientProvider>
             {props.children}
-            <FloatingNavbar />
             <Toaster />
           </QueryClientProvider>
         </ThemeProvider>
