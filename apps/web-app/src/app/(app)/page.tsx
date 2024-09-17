@@ -60,13 +60,14 @@ function EntryContent({ children }: { children?: string }) {
   return <div>{children}</div>;
 }
 
-function Box<T>({
+function Box({
   id,
   children,
+  className,
 }: {
   id: string | number;
   children?: React.ReactNode;
-  onDeposit?: (item: T) => void;
+  className?: string;
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id: id,
@@ -76,27 +77,15 @@ function Box<T>({
     <div
       ref={setNodeRef}
       className={cn(
-        "inline-flex w-full items-center justify-center whitespace-nowrap rounded-md border border-input bg-background py-10 text-sm font-medium shadow-sm transition-colors",
+        "inline-flex w-full items-center justify-center whitespace-nowrap rounded-md border border-input bg-background py-6 text-sm font-medium shadow-sm transition-colors",
         {
           "bg-accent text-accent-foreground": isOver,
         },
+        className,
       )}
     >
       {children}
     </div>
-  );
-}
-
-function TrashBox() {
-  return (
-    <Box
-      onDeposit={(item) => {
-        console.log(item);
-      }}
-      id="trash"
-    >
-      Trash
-    </Box>
   );
 }
 
@@ -190,13 +179,14 @@ function InboxTextarea() {
       <div className="flex justify-between">
         <Button
           variant="outline"
+          disabled={content == ""}
           onClick={() => {
             setContent("");
           }}
         >
           Clear
         </Button>
-        <Button type="submit" className="w-[10rem]">
+        <Button type="submit" disabled={content == ""} className="w-[10rem]">
           Save
         </Button>
       </div>
@@ -218,7 +208,25 @@ function InboxEntries() {
           <Box id="actions">Actions</Box>
           <Box id="events">Events</Box>
           <Box id="delegated">Delegated</Box>
-          <TrashBox />
+          <Box id="trash">Trash</Box>
+          <div className="col-span-4 flex w-full flex-col rounded-md border border-input bg-background p-4 text-sm font-medium shadow-sm transition-colors">
+            <div className="flex w-full items-center justify-between">
+              <div>Projects</div>
+              <Button size="sm">Add project</Button>
+            </div>
+
+            <div className="flex flex-col gap-1 pt-4">
+              <Entry id={"fefezf"}>
+                <EntryContent>Faire</EntryContent>
+              </Entry>
+              <Entry id={"fefezccf"}>
+                <EntryContent>Faire</EntryContent>
+              </Entry>
+              <Entry id={"fefezfxx"}>
+                <EntryContent>Faire</EntryContent>
+              </Entry>
+            </div>
+          </div>
         </div>
         <EntriesList />
       </DndContext>
