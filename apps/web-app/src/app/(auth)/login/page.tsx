@@ -5,15 +5,15 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { pb } from "@faire/pocketbase";
+import { useAuth } from "@faire/pocketbase/client/auth";
 import { Button } from "@faire/ui/button";
 import { Input } from "@faire/ui/input";
 
 export default function LoginPage() {
+  const { login } = useAuth();
+
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) => {
-      return pb.collection("users").authWithPassword(email, password);
-    },
+    mutationFn: login,
     onSuccess: () => {
       toast("Login with sucess !");
     },

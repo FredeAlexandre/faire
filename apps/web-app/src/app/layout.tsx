@@ -3,11 +3,12 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { cn } from "@faire/ui";
+import { Toaster } from "@faire/ui/sonner";
 import { ThemeProvider } from "@faire/ui/theme";
-import { Toaster } from "@faire/ui/toaster";
 
 import "~/app/globals.css";
 
+import { PocketBaseProvider } from "~/components/pocketbase-provider";
 import { QueryClientProvider } from "~/components/query-client-provider";
 import { env } from "~/env";
 
@@ -74,10 +75,12 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <QueryClientProvider>
-            {props.children}
-            <Toaster />
-          </QueryClientProvider>
+          <PocketBaseProvider>
+            <QueryClientProvider>
+              {props.children}
+              <Toaster />
+            </QueryClientProvider>
+          </PocketBaseProvider>
         </ThemeProvider>
       </body>
     </html>

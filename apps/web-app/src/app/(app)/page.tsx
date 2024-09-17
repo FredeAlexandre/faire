@@ -9,6 +9,7 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { pb } from "@faire/pocketbase";
 import { cn } from "@faire/ui";
@@ -141,7 +142,10 @@ function InboxTextarea() {
 
   const { mutateAsync } = useMutation({
     mutationFn: async (content: string) => {
-      if (!pb.authStore.model) return false;
+      if (!pb.authStore.model)
+        throw Error(
+          "You'r not connected to application this action can't be performed",
+        );
 
       return (
         pb
@@ -161,8 +165,8 @@ function InboxTextarea() {
           .then(() => {
             setContent("");
           })
-          .catch((err) => {
-            console.error(err);
+          .catch((err: Error) => {
+            toast(`${err.message}`);
           });
       }}
       className="space-y-2 pt-4"

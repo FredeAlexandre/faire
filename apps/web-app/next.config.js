@@ -15,7 +15,7 @@ const config = withSerwist({
   reactStrictMode: true,
 
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: ["@faire/ui", "@faire/validators"],
+  transpilePackages: ["@faire/ui", "@faire/validators", "@faire/pocketbase"],
 
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
