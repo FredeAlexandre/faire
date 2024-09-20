@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { pb } from "@faire/pocketbase";
+import { createPocketBase } from "@faire/pocketbase";
 import { PocketBaseProvider as RealPocketBaseProvider } from "@faire/pocketbase/client";
 
 export function PocketBaseProvider({
@@ -10,5 +10,9 @@ export function PocketBaseProvider({
 }: {
   children?: React.ReactNode;
 }) {
-  return <RealPocketBaseProvider pb={pb}>{children}</RealPocketBaseProvider>;
+  return (
+    <RealPocketBaseProvider pb={createPocketBase()}>
+      {children}
+    </RealPocketBaseProvider>
+  );
 }
