@@ -1,75 +1,74 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
+import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
-import { useAuth } from "@faire/pocketbase/client/auth";
 import { Button } from "@faire/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useForm,
+} from "@faire/ui/form";
 import { Input } from "@faire/ui/input";
 
-export default function LoginPage() {
-  const { login } = useAuth();
+import { loginAction } from "~/actions/login.action";
+import { loginSchema } from "~/actions/login.schema";
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: login,
+export default function LoginPage() {
+  const form = useForm({
+    schema: loginSchema,
+    defaultValues: { email: "", password: "" },
+  });
+
+  const { executeAsync: login } = useAction(loginAction, {
     onSuccess: () => {
-      toast("Login with sucess !");
+      toast("Success");
     },
-    onError: (err) => {
-      toast("Auth failed !\n" + err.message);
+    onError: () => {
+      toast("Failed");
     },
   });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   return (
-    <main className="container h-screen py-16">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <div className="min-w-[30rem] space-y-4 rounded-xl border p-4">
-          <p className="text-xl font-bold">Login</p>
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="email">Email</label>
-            <Input
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              className="w-full"
-              id="email"
-              type="email"
-            />
-          </div>
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="password">Password</label>
-            <Input
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              className="w-full"
-              id="password"
-              type="password"
-            />
-          </div>
-          <div className="flex gap-2">
-            <Button asChild className="w-full" variant="secondary">
-              <Link href="/register">Create account</Link>
-            </Button>
-            <Button
-              disabled={isPending}
-              onClick={() => {
-                mutate({ email, password });
-              }}
-              className="w-full"
-            >
-              Connect
-            </Button>
-          </div>
-        </div>
-      </div>
-    </main>
+    <div className="flex items-center justify-center pt-20">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(login)}
+          className="w-[20rem] space-y-6"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="jhon@gmail.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="*******" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    </div>
   );
 }
