@@ -16,8 +16,8 @@ import {
 } from "@faire/ui/form";
 import { Input } from "@faire/ui/input";
 
-import { registerAction } from "~/actions/register.action";
-import { registerSchema } from "~/actions/register.schema";
+import { registerAction } from "~/actions/auth.actions";
+import { registerSchema } from "~/actions/auth.schemas";
 
 export default function RegisterPage() {
   const router = useRouter();

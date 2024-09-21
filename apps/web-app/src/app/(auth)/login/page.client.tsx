@@ -16,8 +16,8 @@ import {
 } from "@faire/ui/form";
 import { Input } from "@faire/ui/input";
 
-import { loginAction } from "~/actions/login.action";
-import { loginSchema } from "~/actions/login.schema";
+import { loginAction } from "~/actions/auth.actions";
+import { loginSchema } from "~/actions/auth.schemas";
 
 export default function LoginPage() {
   const router = useRouter();
