@@ -18,17 +18,16 @@ export type User = z.infer<typeof UserSchema>;
 export const useAuth = () => {
   const pb = usePocketBase();
 
-  const user = React.useSyncExternalStore(
-    (callback) => pb.authStore.onChange(callback),
-    () => {
-      const model = pb.authStore.model;
-      return UserSchema.nullable().parse(model);
-    },
-  );
+  const [user, setUser] = React.useState<User | null>(null);
+  const [token, setToken] = React.useState("");
 
-  const token = React.useSyncExternalStore(
-    (callback) => pb.authStore.onChange(callback),
-    () => pb.authStore.token,
+  React.useEffect(
+    () =>
+      pb.authStore.onChange((token, model) => {
+        setToken(token);
+        setUser(UserSchema.nullable().parse(model));
+      }),
+    [pb],
   );
 
   const login = ({ email, password }: { email: string; password: string }) => {
