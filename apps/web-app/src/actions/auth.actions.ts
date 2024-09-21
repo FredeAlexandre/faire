@@ -45,3 +45,8 @@ export const registerAction = client
       httpOnly: false,
     });
   });
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export const logoutAction = client.action(async () => {
+  cookies().delete("pb_auth");
+});
