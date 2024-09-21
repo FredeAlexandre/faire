@@ -63,9 +63,6 @@ importers:
       '@dnd-kit/core':
         specifier: ^6.1.0
         version: 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@faire/pocketbase':
-        specifier: workspace:^
-        version: link:../../packages/pocketbase
       '@faire/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -90,6 +87,9 @@ importers:
       next-safe-action:
         specifier: ^7.9.3
         version: 7.9.3(next@14.2.5(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.23.8)
+      pocketbase:
+        specifier: ^0.21.5
+        version: 0.21.5
       react:
         specifier: catalog:react18
         version: 18.3.1
@@ -99,6 +99,9 @@ importers:
       superjson:
         specifier: 2.2.1
         version: 2.2.1
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.0(react@18.3.1)
       zod:
         specifier: 'catalog:'
         version: 3.23.8
@@ -142,52 +145,6 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10(ts-node@10.9.2(@types/node@20.14.15)(typescript@5.5.4))
-      typescript:
-        specifier: 'catalog:'
-        version: 5.5.4
-
-  packages/pocketbase:
-    dependencies:
-      '@tanstack/react-query':
-        specifier: 'catalog:'
-        version: 5.51.23(react@18.3.1)
-      pocketbase:
-        specifier: ^0.21.5
-        version: 0.21.5
-      react:
-        specifier: catalog:react18
-        version: 18.3.1
-      react-dom:
-        specifier: catalog:react18
-        version: 18.3.1(react@18.3.1)
-      usehooks-ts:
-        specifier: ^3.1.0
-        version: 3.1.0(react@18.3.1)
-      zod:
-        specifier: 'catalog:'
-        version: 3.23.8
-    devDependencies:
-      '@faire/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint
-      '@faire/prettier-config':
-        specifier: workspace:*
-        version: link:../../tooling/prettier
-      '@faire/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/typescript
-      '@types/react':
-        specifier: catalog:react18
-        version: 18.3.3
-      '@types/react-dom':
-        specifier: catalog:react18
-        version: 18.3.0
-      eslint:
-        specifier: 'catalog:'
-        version: 9.9.0(jiti@1.21.6)
-      prettier:
-        specifier: 'catalog:'
-        version: 3.3.3
       typescript:
         specifier: 'catalog:'
         version: 5.5.4

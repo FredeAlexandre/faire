@@ -25,11 +25,17 @@ export default function LoginPage() {
   });
 
   const { executeAsync: login } = useAction(loginAction, {
-    onSuccess: () => {
-      toast("Success");
+    onSuccess: (result) => {
+      console.log(result);
+      if (!result.data) {
+        toast("Something went wrong when receiving data from server");
+      } else {
+        toast(result.data.message);
+      }
     },
-    onError: () => {
-      toast("Failed");
+    onError: (err) => {
+      console.log(err);
+      toast("Something went wrong when receiving data from server");
     },
   });
 

@@ -5,11 +5,14 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { pb } from "@faire/pocketbase";
 import { Button } from "@faire/ui/button";
 import { Input } from "@faire/ui/input";
 
+import { usePocketBase } from "~/pocketbase/use-pocketbase";
+
 export default function RegisterPage() {
+  const pb = usePocketBase();
+
   const { mutate, isPending } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) => {
       return pb

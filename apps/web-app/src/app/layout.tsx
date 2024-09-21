@@ -8,9 +8,9 @@ import { ThemeProvider } from "@faire/ui/theme";
 
 import "~/app/globals.css";
 
-import { PocketBaseProvider } from "~/components/pocketbase-provider";
 import { QueryClientProvider } from "~/components/query-client-provider";
 import { env } from "~/env";
+import { PocketBaseProvider } from "~/pocketbase/pocketbase-provider";
 
 const APP_NAME = "PWA App";
 const APP_DEFAULT_TITLE = "My Awesome PWA App";

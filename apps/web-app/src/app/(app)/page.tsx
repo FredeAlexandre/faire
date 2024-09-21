@@ -1,6 +1,7 @@
 "use client";
 
 import type { DragEndEvent } from "@dnd-kit/core";
+import type PocketBase from "pocketbase";
 import * as React from "react";
 import {
   DndContext,
@@ -11,13 +12,13 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { pb } from "@faire/pocketbase";
 import { cn } from "@faire/ui";
 import { Button } from "@faire/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@faire/ui/tabs";
 import { Textarea } from "@faire/ui/textarea";
 
 import { queryClient } from "~/components/query-client-provider";
+import { usePocketBase } from "~/pocketbase/use-pocketbase";
 
 function Entry({
   children,
@@ -89,12 +90,20 @@ function Box({
   );
 }
 
-async function TrashBoxHandleEntry(item: string) {
+async function TrashBoxHandleEntry({
+  item,
+  pb,
+}: {
+  item: string;
+  pb: PocketBase;
+}) {
   await pb.collection("inbox_entries").update(item, { trash: true });
   await queryClient.invalidateQueries({ queryKey: ["entries"] });
 }
 
 function EntriesList() {
+  const pb = usePocketBase();
+
   const { data } = useQuery({
     queryKey: ["entries"],
     queryFn: async () => {
@@ -125,6 +134,8 @@ function EntriesList() {
 }
 
 function InboxTextarea() {
+  const pb = usePocketBase();
+
   const ref = React.useRef<HTMLFormElement>(null);
 
   const [content, setContent] = React.useState("");
@@ -195,9 +206,12 @@ function InboxTextarea() {
 }
 
 function InboxEntries() {
+  const pb = usePocketBase();
+
   function handleDragEnd(event: DragEndEvent) {
     if (!event.over || typeof event.active.id == "number") return;
-    if (event.over.id == "trash") return TrashBoxHandleEntry(event.active.id);
+    if (event.over.id == "trash")
+      return TrashBoxHandleEntry({ item: event.active.id, pb });
   }
 
   return (

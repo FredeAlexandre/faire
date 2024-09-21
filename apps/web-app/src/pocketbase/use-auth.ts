@@ -3,7 +3,7 @@
 import * as React from "react";
 import { z } from "zod";
 
-import { usePocketBase } from ".";
+import { usePocketBase } from "./use-pocketbase";
 
 export const UserSchema = z.object({
   id: z.string(),
