@@ -3,8 +3,7 @@
 import { cookies } from "next/headers";
 import PocketBase from "pocketbase";
 
-import { pocketBaseCookieExtractValue } from "~/lib/pocketbase-cookie-extract-value";
-import { base_url } from "~/pocketbase";
+import { base_url, getValueFromCookie } from "~/pocketbase";
 import { client } from "./client";
 import { loginSchema } from "./login.schema";
 
@@ -13,23 +12,11 @@ export const loginAction = client
   .action(async ({ parsedInput: { email, password } }) => {
     const pb = new PocketBase(base_url);
 
-    try {
-      await pb.collection("users").authWithPassword(email, password);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_) {
-      return {
-        success: false,
-        message: "Invalid credentials, failed to auth",
-      } as const;
-    }
+    await pb.collection("users").authWithPassword(email, password);
 
-    const value = pocketBaseCookieExtractValue(pb.authStore.exportToCookie());
+    const value = getValueFromCookie(pb.authStore.exportToCookie());
 
-    if (!value)
-      return {
-        success: false,
-        message: "Internal server error, cookie failed to set",
-      } as const;
+    if (!value) throw new Error("Failed to extract value from cookie");
 
     cookies().set("pb_auth", value, {
       maxAge: 1209600,
@@ -37,7 +24,4 @@ export const loginAction = client
       secure: true,
       httpOnly: false,
     });
-
-    if (!value)
-      return { success: true, message: "You are now connected !" } as const;
   });
