@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
 import { Button } from "@faire/ui/button";
@@ -16,8 +15,8 @@ import {
 } from "@faire/ui/form";
 import { Input } from "@faire/ui/input";
 
-import { loginAction } from "~/actions/auth.actions";
 import { loginSchema } from "~/actions/auth.schemas";
+import { useAuth } from "~/pocketbase/use-auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,19 +26,21 @@ export default function LoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
-  const { executeAsync: login } = useAction(loginAction, {
-    onSuccess: () => {
-      toast.success("Success ! You are now logged in.");
-      router.push("/");
-    },
-    onError: ({ error }) => {
-      if (error.serverError) {
-        toast.error("Failed authentificate", {
-          description: error.serverError,
-        });
-      } else {
-        toast.error("Failed auth. Something went wrong.");
-      }
+  const { login } = useAuth({
+    loginActionUtils: {
+      onSuccess: () => {
+        toast.success("Success ! You are now logged in.");
+        router.push("/");
+      },
+      onError: ({ error }) => {
+        if (error.serverError) {
+          toast.error("Failed authentificate", {
+            description: error.serverError,
+          });
+        } else {
+          toast.error("Failed auth. Something went wrong.");
+        }
+      },
     },
   });
 

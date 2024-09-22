@@ -1,8 +1,15 @@
 "use client";
 
 import * as React from "react";
+import { useAction } from "next-safe-action/hooks";
 import { z } from "zod";
 
+import type { UtilsFor } from "~/utils/types";
+import {
+  loginAction as loginActionFn,
+  registerAction as registerActionFn,
+} from "~/actions/auth.actions";
+import { deleteCookie } from "~/utils/delete-cookie";
 import { usePocketBase } from "./use-pocketbase";
 
 export const UserSchema = z.object({
@@ -15,7 +22,12 @@ export const UserSchema = z.object({
 
 export type User = z.infer<typeof UserSchema>;
 
-export const useAuth = () => {
+export const useAuth = (opts?: {
+  loginActionUtils?: UtilsFor<typeof loginActionFn>;
+  registerActionUtils?: UtilsFor<typeof registerActionFn>;
+}) => {
+  const { loginActionUtils, registerActionUtils } = opts ?? {};
+
   const pb = usePocketBase();
 
   const [user, setUser] = React.useState<User | null>(null);
@@ -30,23 +42,51 @@ export const useAuth = () => {
     [pb],
   );
 
-  const login = ({ email, password }: { email: string; password: string }) => {
-    return pb.collection("users").authWithPassword(email, password);
+  const { executeAsync: loginAction } = useAction(
+    loginActionFn,
+    loginActionUtils,
+  );
+
+  const { executeAsync: registerAction } = useAction(
+    registerActionFn,
+    registerActionUtils,
+  );
+
+  const login = async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    await loginAction({ email, password });
+    pb.authStore.loadFromCookie(document.cookie);
   };
 
   const logout = () => {
-    return pb.authStore.clear();
+    pb.authStore.clear();
+    deleteCookie("pb_auth");
   };
 
-  const register = async (
-    data: {
-      email: string;
-      password: string;
-      repassword: string;
-    } & Partial<User>,
-  ) => {
-    return pb.collection("users").create(data);
+  const register = async ({
+    email,
+    password,
+    passwordConfirm,
+  }: {
+    email: string;
+    password: string;
+    passwordConfirm: string;
+  }) => {
+    await registerAction({ email, password, passwordConfirm });
+    pb.authStore.loadFromCookie(document.cookie);
   };
 
-  return { user, token, login, logout, register, isAuth: user !== null };
+  return {
+    user,
+    token,
+    login,
+    logout,
+    register,
+    isAuth: pb.authStore.isValid,
+  };
 };

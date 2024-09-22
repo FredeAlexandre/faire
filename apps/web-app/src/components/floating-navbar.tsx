@@ -22,6 +22,8 @@ import {
   TooltipTrigger,
 } from "@faire/ui/tooltip";
 
+import { useAuth } from "~/pocketbase/use-auth";
+
 export function NavbarModeToggleButton() {
   const { setTheme, theme } = useTheme();
 
@@ -86,6 +88,10 @@ function NavbarButton({
 }
 
 export function FloatingNavbar() {
+  const { isAuth } = useAuth();
+
+  if (!isAuth) return null;
+
   return (
     <div className="fixed bottom-8 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border bg-background p-1 shadow-sm">
       <NavbarButton to="/" icon={Inbox} label="Inbox" />

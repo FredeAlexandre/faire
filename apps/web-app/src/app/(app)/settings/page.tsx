@@ -1,24 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAction } from "next-safe-action/hooks";
-import { toast } from "sonner";
 
 import { Button } from "@faire/ui/button";
 
-import { logoutAction } from "~/actions/auth.actions";
+import { useAuth } from "~/pocketbase/use-auth";
 
 export default function Settings() {
   const router = useRouter();
 
-  const { execute: logout } = useAction(logoutAction, {
-    onSuccess() {
-      router.push("/");
-    },
-    onError({ error }) {
-      toast.error("Something went wrong", { description: error.serverError });
-    },
-  });
+  const { logout } = useAuth();
 
   return (
     <div className="container max-w-[48rem] pt-10">
@@ -26,6 +17,7 @@ export default function Settings() {
       <Button
         onClick={() => {
           logout();
+          router.push("/");
         }}
       >
         Sign out

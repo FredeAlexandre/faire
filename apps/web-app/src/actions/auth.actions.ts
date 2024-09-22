@@ -18,12 +18,21 @@ export const loginAction = client
 
     if (!value) throw new Error("Failed to extract value from cookie");
 
-    cookies().set("pb_auth", value, {
-      maxAge: 1209600,
-      sameSite: "strict",
-      secure: true,
-      httpOnly: false,
-    });
+    cookies().set(
+      "pb_auth",
+      JSON.stringify({
+        token: pb.authStore.token,
+        model: pb.authStore.model
+          ? (JSON.parse(JSON.stringify(pb.authStore.model)) as unknown)
+          : null,
+      }),
+      {
+        maxAge: 1209600,
+        sameSite: "strict",
+        secure: true,
+        httpOnly: false,
+      },
+    );
   });
 
 export const registerAction = client
@@ -38,15 +47,19 @@ export const registerAction = client
 
     if (!value) throw new Error("Failed to extract value from cookie");
 
-    cookies().set("pb_auth", value, {
-      maxAge: 1209600,
-      sameSite: "strict",
-      secure: true,
-      httpOnly: false,
-    });
+    cookies().set(
+      "pb_auth",
+      JSON.stringify({
+        token: pb.authStore.token,
+        model: pb.authStore.model
+          ? (JSON.parse(JSON.stringify(pb.authStore.model)) as unknown)
+          : null,
+      }),
+      {
+        maxAge: 1209600,
+        sameSite: "strict",
+        secure: true,
+        httpOnly: false,
+      },
+    );
   });
-
-// eslint-disable-next-line @typescript-eslint/require-await
-export const logoutAction = client.action(async () => {
-  cookies().delete("pb_auth");
-});
