@@ -8,7 +8,7 @@ import ClientPage from "./page.client";
 export default function RegisterPage() {
   const pb = new PocketBase(base_url);
 
-  if (isAuth(pb)) redirect("/");
+  if (isAuth(pb)) redirect("/inbox");
 
   return <ClientPage />;
 }
