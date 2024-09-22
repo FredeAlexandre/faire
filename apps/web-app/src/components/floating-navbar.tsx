@@ -1,12 +1,14 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Calendar,
   Inbox,
   ListTree,
+  Loader,
   Moon,
   Settings,
   Sun,
@@ -25,7 +27,19 @@ import {
 } from "@faire/ui/tooltip";
 
 export function NavbarModeToggleButton() {
+  const [mounted, setMounted] = React.useState(false);
   const { setTheme, resolvedTheme } = useTheme();
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted)
+    return (
+      <Button className="h-12 w-12 animate-spin rounded-full" variant="ghost">
+        <Loader />
+      </Button>
+    );
 
   if (resolvedTheme == "light") {
     return (
