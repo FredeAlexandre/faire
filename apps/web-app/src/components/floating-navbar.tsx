@@ -25,9 +25,9 @@ import {
 } from "@faire/ui/tooltip";
 
 export function NavbarModeToggleButton() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
 
-  if (theme == "light") {
+  if (resolvedTheme == "light") {
     return (
       <Button
         onClick={() => {
@@ -41,7 +41,7 @@ export function NavbarModeToggleButton() {
     );
   }
 
-  if (theme == "dark") {
+  if (resolvedTheme == "dark") {
     return (
       <Button
         onClick={() => {
