@@ -112,8 +112,8 @@ export function FloatingNavbar() {
   return (
     <div className="fixed bottom-8 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border bg-background p-1 shadow-sm">
       <NavbarButton to="/inbox" icon={Inbox} label="Inbox" />
-      <NavbarButton to="/execute" icon={Zap} label="Execute" />
-      <NavbarButton to="/actions" icon={ListTree} label="Actions" />
+      <NavbarButton to="/execute" icon={ListTree} label="Execute" />
+      <NavbarButton to="/actions" icon={Zap} label="Actions" />
       <NavbarButton to="/events" icon={Calendar} label="Events" />
       <NavbarButton to="/delegated" icon={Users} label="Delegated" />
       <NavbarButton to="/settings" icon={Settings} label="Settings" />

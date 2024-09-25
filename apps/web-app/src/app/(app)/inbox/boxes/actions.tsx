@@ -2,11 +2,11 @@ import type { DragEndEvent } from "@dnd-kit/core";
 import type { QueryClient } from "@tanstack/react-query";
 import type PocketBase from "pocketbase";
 import { useDroppable } from "@dnd-kit/core";
-import { Trash } from "lucide-react";
+import { Zap } from "lucide-react";
 
 import { cn } from "@faire/ui";
 
-export const id = "trash";
+export const id = "actions";
 
 export function Box() {
   const { isOver, setNodeRef } = useDroppable({
@@ -24,7 +24,7 @@ export function Box() {
       )}
     >
       <div className="flex items-center gap-1">
-        <Trash size={14} /> Trash
+        <Zap size={14} /> Actions
       </div>
     </div>
   );
@@ -40,6 +40,20 @@ export async function handleDragEnd({
   queryClient: QueryClient;
 }) {
   if (typeof event.active.id == "number") return;
-  await pb.collection("inbox_entries").update(event.active.id, { trash: true });
+
+  const data = await pb.collection("inbox_entries").getOne(event.active.id);
+  const { content } = data;
+
+  if (
+    pb.authStore.model == null ||
+    typeof pb.authStore.model.id != "string" ||
+    typeof content != "string"
+  )
+    return;
+
+  await pb
+    .collection("actions")
+    .create({ user: pb.authStore.model.id, title: content });
+  await pb.collection("inbox_entries").delete(event.active.id);
   await queryClient.invalidateQueries({ queryKey: ["entries"] });
 }

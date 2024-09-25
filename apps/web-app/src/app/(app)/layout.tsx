@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { FloatingNavbar } from "~/components/floating-navbar";
+import { FloatingNavbar } from "./floating-navbar";
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
