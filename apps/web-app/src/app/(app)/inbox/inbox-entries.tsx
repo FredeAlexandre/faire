@@ -1,7 +1,6 @@
 "use client";
 
 import type { DragEndEvent } from "@dnd-kit/core";
-import type PocketBase from "pocketbase";
 import * as React from "react";
 import {
   DndContext,
@@ -9,13 +8,13 @@ import {
   useDraggable,
   useDroppable,
 } from "@dnd-kit/core";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { cn } from "@faire/ui";
 import { Button } from "@faire/ui/button";
 
-import { queryClient } from "~/components/query-client-provider";
 import { usePocketBase } from "~/pocketbase/use-pocketbase";
+import boxes from "./boxes";
 
 function Entry({
   children,
@@ -87,17 +86,6 @@ function Box({
   );
 }
 
-async function TrashBoxHandleEntry({
-  item,
-  pb,
-}: {
-  item: string;
-  pb: PocketBase;
-}) {
-  await pb.collection("inbox_entries").update(item, { trash: true });
-  await queryClient.invalidateQueries({ queryKey: ["entries"] });
-}
-
 function EntriesList() {
   const pb = usePocketBase();
 
@@ -132,22 +120,25 @@ function EntriesList() {
 
 export function InboxEntries() {
   const pb = usePocketBase();
+  const queryClient = useQueryClient();
 
   function handleDragEnd(event: DragEndEvent) {
-    if (!event.over || typeof event.active.id == "number") return;
-    if (event.over.id == "trash")
-      return TrashBoxHandleEntry({ item: event.active.id, pb });
+    if (!event.over) return;
+    for (const { id, handleDragEnd } of boxes) {
+      if (id == event.over.id) return handleDragEnd({ event, pb, queryClient });
+    }
   }
 
   return (
     <div className="space-y-6 pt-4">
       <DndContext collisionDetection={pointerWithin} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-4 gap-4">
-          {/** Faire comme si c'etait des boutons carres */}
+          {boxes.map(({ Box }) => (
+            <Box />
+          ))}
           <Box id="actions">Actions</Box>
           <Box id="events">Events</Box>
           <Box id="delegated">Delegated</Box>
-          <Box id="trash">Trash</Box>
           <div className="col-span-4 flex w-full flex-col rounded-md border border-input bg-background p-4 text-sm font-medium shadow-sm transition-colors">
             <div className="flex w-full items-center justify-between">
               <div>Projects</div>
